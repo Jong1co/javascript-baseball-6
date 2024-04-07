@@ -9,13 +9,21 @@
 
 export class Validation {
   constructor(length, min = 1, max = 9) {
-    this.length = length;
+    this.answerLength = length;
     this.min = min;
     this.max = max;
   }
 
+  isValid(input) {
+    this.isValidInputLength(input);
+    this.isNumberInRange(input);
+    this.hasDuplicatedNumber(input);
+  }
+
   isValidInputLength(input) {
-    return input.length === this.length;
+    if (input.length !== this.answerLength) {
+      throw new Error(ERROR.NOT_VALID_LENGTH);
+    }
   }
 
   isPositiveInteger(input) {
@@ -27,10 +35,11 @@ export class Validation {
   }
 
   isNumberInRange(input) {
-    if (this.#isFalsyButNotZero(input)) return false;
+    if (this.#isFalsyButNotZero(input)) throw new Error(ERROR.NOT_VALID_RANGE);
 
     for (let num of input) {
-      if (num < this.min || num > this.max) return false;
+      if (num < this.min || num > this.max)
+        throw new Error(ERROR.NOT_VALID_RANGE);
     }
 
     return true;
@@ -40,8 +49,10 @@ export class Validation {
     if (this.#isFalsyButNotZero(input)) return false;
 
     const set = new Set([...input]);
-    console.log(set);
-    return set.size !== input.length;
+
+    if (set.size !== input.length) {
+      throw new Error(ERROR.HAS_DUPLICATE);
+    }
   }
 
   #isFalsyButNotZero(input) {
