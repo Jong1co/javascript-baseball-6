@@ -66,12 +66,17 @@ export class BaseballService {
   async makeAnAttempt() {
     const input = await Util.readLine(VIEW.ENTER_NUMBER);
 
-    //책임 연쇄 패턴 적용하면 ??
-    this.validator.isValidInputLength(input);
-    this.validator.isPositiveInteger(input);
-    this.validator.isNumberInRange(input);
-    this.validator.hasDuplicatedNumber(input);
-    this.validator.isFalsyButNotZero(input);
+    if (!this.validator.isValidInputLength(input)) {
+      throw new Error(ERROR.NOT_VALID_LENGTH);
+    }
+
+    if (!this.validator.isNumberInRange(input)) {
+      throw new Error(ERROR.NOT_VALID_RANGE);
+    }
+
+    if (this.validator.hasDuplicatedNumber(input)) {
+      throw new Error(ERROR.HAS_DUPLICATE);
+    }
 
     const { ball, strike } = this.getScore(input);
 

@@ -7,8 +7,6 @@
  * 같은 숫자가 존재한다면 throw ex)111 (경곗값 테스트 적용)
  */
 
-import { ERROR } from "../constants/error.js";
-
 export class Validation {
   constructor(length, min = 1, max = 9) {
     this.length = length;
@@ -17,31 +15,36 @@ export class Validation {
   }
 
   isValidInputLength(input) {
-    if (input.length !== this.length) throw new Error(ERROR.NOT_VALID_LENGTH);
+    return input.length === this.length;
   }
 
   isPositiveInteger(input) {
     const regex = /^\d+$/;
 
-    if (input.includes("0") || !regex.test(input))
-      throw new Error(ERROR.NOT_VALID_RANGE);
+    if (input.includes("0")) return false;
+
+    return regex.test(input);
   }
 
   isNumberInRange(input) {
+    if (this.#isFalsyButNotZero(input)) return false;
+
     for (let num of input) {
-      if (num < this.min || num > this.max)
-        throw new Error(ERROR.NOT_VALID_RANGE);
+      if (num < this.min || num > this.max) return false;
     }
+
+    return true;
   }
 
   hasDuplicatedNumber(input) {
-    const set = new Set([...input]);
+    if (this.#isFalsyButNotZero(input)) return false;
 
-    if (set.size !== input.length) throw new Error(ERROR.HAS_DUPLICATE);
+    const set = new Set([...input]);
+    console.log(set);
+    return set.size !== input.length;
   }
 
-  isFalsyButNotZero(input) {
-    if (typeof input !== "string" || input === "")
-      throw new Error(ERROR.NOT_VALID_LENGTH);
+  #isFalsyButNotZero(input) {
+    return typeof input !== "string" || input === "";
   }
 }
