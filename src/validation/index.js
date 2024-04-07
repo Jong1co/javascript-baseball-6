@@ -26,14 +26,6 @@ export class Validation {
     }
   }
 
-  isPositiveInteger(input) {
-    const regex = /^\d+$/;
-
-    if (input.includes("0")) return false;
-
-    return regex.test(input);
-  }
-
   isNumberInRange(input) {
     if (this.#isFalsyButNotZero(input)) throw new Error(ERROR.NOT_VALID_RANGE);
 
